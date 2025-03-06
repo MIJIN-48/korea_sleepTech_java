@@ -68,16 +68,20 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public void checkTodo(Long id) {
+	public void checkTodo(String userId, Long id) {
 		try {
 			Task task = repository.findTaskById(id)
 					.orElseThrow(()-> new IllegalArgumentException("해당 ID의 할일은 존재하지 않습니다. ID: " + id));
 			
-			task.setTodoCheck(!task.isTodoCheck());
-			if (task.isTodoCheck()) {
-				System.out.println("할일 체크가 완료되었습니다.");
+			if (task.getUserId().equals(userId)) {
+				task.setTodoCheck(!task.isTodoCheck());
+				if (task.isTodoCheck()) {
+					System.out.println("할일 체크가 완료되었습니다.");
+				} else {
+					System.out.println("할일 체크가 취소되었습니다.");
+				}
 			} else {
-				System.out.println("할일 체크가 취소되었습니다.");
+				System.out.println("로그인 계정에 등록된 할일이 아닙니다. 리스트 번호를 다시 입력해주세요. 로그인 ID: " + userId);
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -85,41 +89,49 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public void updateTask(Long id, TaskUpdateRequestDto dto) {
+	public void updateTask(String userId, Long id, TaskUpdateRequestDto dto) {
 		try {
 			Task task = repository.findTaskById(id)
 					.orElseThrow(()-> new IllegalArgumentException("해당 ID의 할일은 존재하지 않습니다. ID: " + id));
 			
-			task.setContent(dto.getContent());
-			task.setTodoDate(dto.getTodoDate());
-			
-			System.out.println(task);
-			System.out.println("할일 수정이 완료되었습니다.");
+			if (task.getUserId().equals(userId)) {
+				task.setContent(dto.getContent());
+				task.setTodoDate(dto.getTodoDate());
+				
+				System.out.println(task);
+				System.out.println("할일 수정이 완료되었습니다.");
+			} else {
+				System.out.println("로그인 계정에 등록된 할일이 아닙니다. 리스트 번호를 다시 입력해주세요. 로그인 ID: " + userId);
+			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
 
 	@Override
-	public void deleteTask(Long id) {
+	public void deleteTask(String userId, Long id) {
 		try {
 			Task task = repository.findTaskById(id)
 					.orElseThrow(() -> new IllegalArgumentException("해당 ID의 할일은 존재하지 않습니다. ID: " + id));
 			
-			repository.delete(task);
-			System.out.println("삭제가 완료되었습니다.");
+			if (task.getUserId().equals(userId)) {
+				repository.delete(task);
+				System.out.println("삭제가 완료되었습니다.");
+			} else {
+				System.out.println("로그인 계정에 등록된 할일이 아닙니다. 리스트 번호를 다시 입력해주세요. 로그인 ID: " + userId);
+			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}	}
 
 	@Override
-	public List<TaskResponseDto> findIsTodoCheck(String userId, String isTodo) {
+	public List<TaskResponseDto> findIsTodoCheck(String userId, int isTodo) {
 		List<TaskResponseDto> responseDto = null;
 		
 		try {
 			List<Task> tasks = repository.findAll();
 			
-			if (isTodo.equals("완료")) {
+			if (isTodo == 1) {
 				responseDto = tasks.stream()
 						.filter(task -> task.getUserId().equals(userId) && task.isTodoCheck())
 						.map(filteredTask -> new TaskResponseDto(filteredTask.getId(), filteredTask.getUserId()
@@ -131,7 +143,7 @@ public class TaskServiceImpl implements TaskService {
 						.map(filteredTask -> new TaskResponseDto(filteredTask.getId(), filteredTask.getUserId()
 								, filteredTask.getContent(), filteredTask.getTodoDate(), filteredTask.isTodoCheck()))
 						.collect(Collectors.toList());
-			}
+			} 
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

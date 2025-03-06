@@ -26,19 +26,19 @@ public class TaskController {
 		return taskServiceImpl.findAllTask(userId);
 	}
 	
-	public void checkTodo(Long id) {
-		taskServiceImpl.checkTodo(id);
+	public void checkTodo(String userId, Long id) {
+		taskServiceImpl.checkTodo(userId, id);
 	}
 	
-	public void updateTask(Long id, TaskUpdateRequestDto dto) {
-		taskServiceImpl.updateTask(id, dto);
+	public void updateTask(String userId, Long id, TaskUpdateRequestDto dto) {
+		taskServiceImpl.updateTask(userId, id, dto);
 	}
 	
-	public void deleteTask(Long id) {
-		taskServiceImpl.deleteTask(id);
+	public void deleteTask(String userId, Long id) {
+		taskServiceImpl.deleteTask(userId, id);
 	}
 	
-	public List<TaskResponseDto> findIsTodo(String userId, String isTodo) {
+	public List<TaskResponseDto> findIsTodo(String userId, int isTodo) {
 		return taskServiceImpl.findIsTodoCheck(userId, isTodo);
 	}
 }

@@ -188,52 +188,82 @@ public class App {
 			break;
 		}
 		case 8: {
-			String date = getInput("할일 조회할 날짜를 입력하세요");
-			List<TaskResponseDto> dto = TASK_CONTROLLER.findTaskByTodoDate(USER_CONTROLLER.getLoggedId(), date);
-			
-			if (dto.isEmpty()) {
-				System.out.println("등록된 할일이 없습니다.");
+			if (USER_CONTROLLER.loginCheck()) {
+				String date = getInput("할일 조회할 날짜를 입력하세요");
+				List<TaskResponseDto> dto = TASK_CONTROLLER.findTaskByTodoDate(USER_CONTROLLER.getLoggedId(), date);
+				
+				if (dto.isEmpty()) {
+					System.out.println("등록된 할일이 없습니다.");
+				} else {
+					System.out.println(dto);
+				}
 			} else {
-				System.out.println(dto);
+				System.out.println("로그인 후 이용해 주세요.");
 			}
 			break;
 		}
 		case 9: {
-			List<TaskResponseDto> dto = TASK_CONTROLLER.findTaskByUserId(USER_CONTROLLER.getLoggedId());
-			
-			if (dto.isEmpty()) {
-				System.out.println("등록된 할일이 없습니다.");
+			if (USER_CONTROLLER.loginCheck()) {
+				List<TaskResponseDto> dto = TASK_CONTROLLER.findTaskByUserId(USER_CONTROLLER.getLoggedId());
+				
+				if (dto.isEmpty()) {
+					System.out.println("등록된 할일이 없습니다.");
+				} else {
+					System.out.println(dto);
+				}
 			} else {
-				System.out.println(dto);
+				System.out.println("로그인 후 이용해 주세요.");
 			}
 			break;
 		}
 		case 10: {
-			String result = getInput("완료 /  미완료");
-			
-			List<TaskResponseDto> dto = TASK_CONTROLLER.findIsTodo(USER_CONTROLLER.getLoggedId(), result);
-			
-			if (dto.isEmpty()) {
-				System.out.println("등록된 할일이 없습니다.");
+			if (USER_CONTROLLER.loginCheck()) {
+				System.out.println("1. 완료 / 2. 미완료");
+				int result = getChoice();
+				
+				if (result == 1 || result == 2) {
+					List<TaskResponseDto> dto = TASK_CONTROLLER.findIsTodo(USER_CONTROLLER.getLoggedId(), result);
+					
+						if (dto.isEmpty()) {
+							System.out.println("등록된 할일이 없습니다.");
+						} else {
+							System.out.println(dto);
+						}
+				} else {
+					System.out.println("숫자 1 또는 2 로 입력해주세요");
+				}
+				
 			} else {
-				System.out.println(dto);
+				System.out.println("로그인 후 이용해 주세요.");
 			}
 			break;
 		}
 		case 11: {
-			long id = getIdInput();
-			TASK_CONTROLLER.checkTodo(id);
+			if (USER_CONTROLLER.loginCheck()) {
+				long id = getIdInput();
+				TASK_CONTROLLER.checkTodo(USER_CONTROLLER.getLoggedId(),id);
+			} else {
+				System.out.println("로그인 후 이용해 주세요.");
+			}
 			break;
 		}
 		case 12: {
-			long id = getIdInput();
-			TaskUpdateRequestDto requestDto = updateTaskRequest();
-			TASK_CONTROLLER.updateTask(id, requestDto);
+			if (USER_CONTROLLER.loginCheck()) {
+				long id = getIdInput();
+				TaskUpdateRequestDto requestDto = updateTaskRequest();
+				TASK_CONTROLLER.updateTask(USER_CONTROLLER.getLoggedId(), id, requestDto);
+			} else {
+				System.out.println("로그인 후 이용해 주세요.");
+			}
 			break;
 		}
 		case 13: {
-			long id = getIdInput();
-			TASK_CONTROLLER.deleteTask(id);
+			if (USER_CONTROLLER.loginCheck()) {
+				long id = getIdInput();
+				TASK_CONTROLLER.deleteTask(USER_CONTROLLER.getLoggedId(), id);
+			} else {
+				System.out.println("로그인 후 이용해 주세요.");
+			}
 			break;
 		}
 		case 0: {
