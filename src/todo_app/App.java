@@ -225,7 +225,7 @@ public class App {
 					List<TaskResponseDto> dto = TASK_CONTROLLER.findIsTodo(USER_CONTROLLER.getLoggedId(), result);
 					
 						if (dto.isEmpty()) {
-							System.out.println("등록된 할일이 없습니다.");
+							System.out.println("(미)완료된 할일이 없습니다.");
 						} else {
 							System.out.println(dto);
 						}
@@ -290,7 +290,6 @@ public class App {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
-			// 예외 발생과 상관없이 반드시 실행 보장
 			sc.close();
 		}
 	}
